@@ -1,7 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\DataBase",
+    "\\Monopoly",
+    "\\Monopoly\\__pycache__"
   ],
-  "SelectedNode": "\\C:\\Users\\jih-s\\Documents\\碩士班\\中興\\LAB\\Monopoly",
+  "SelectedNode": "\\Monopoly\\Monopoly.py",
   "PreviewInSolutionExplorer": false
 }
