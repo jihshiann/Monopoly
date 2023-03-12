@@ -1,33 +1,11 @@
-import configparser
-import os
 import random
-import pyodbc
-from py_linq import Enumerable
-
-server = '(localdb)\MSSQLLocalDB' 
-database = 'MonopolyRecord' 
-username = 'test' 
-password = 'test' 
-dbConn = pyodbc.connect('DRIVER={ODBC Driver 18 for SQL Server};SERVER='+server+';DATABASE='+database+';ENCRYPT=yes;UID='+username+';PWD='+ password)
+from Tools import *
 
 
-#取得config
-config = configparser.ConfigParser()
-configPath = os.path.join(os.path.dirname(__file__), 'config.ini')
-config.read(configPath)
 #全域變數
 loserCount = 0
-global rate_dict 
-rate_dict = {key: float(value) for key, value in dict(config.items('Rate')).items()}
+global rate_dict; rate_dict = getParaDictByConfig('Rate')
 
-#FUN:取得各項費率 by config
-def getRateDict():
-    rate_dict = dict(config.items('Rate'))
-    # 將所有的 value 轉換為 float
-    rate_dict = {key: float(value) for key, value in rate_dict.items()}
-    return rate_dict
-
-#Land
 class Land:
     def __init__(self, land_dict):
         self.name = land_dict['name']
@@ -35,46 +13,41 @@ class Land:
         self.owner = land_dict['owner']
         self.level = int(land_dict['level'].strip())
         self.location = int(land_dict['location'].strip())
-        self.upgradeSpent = int(land_dict['upgradespent'].strip()) #升級花費總額
-        self.earn = int(land_dict['earn'].strip()) #過路費總收入
+        #升級花費總額
+        self.upgradeSpent = int(land_dict['upgradespent'].strip()) 
+        #過路費總收入
+        self.earn = int(land_dict['earn'].strip()) 
 
 # FUN:取得土地設定 by config
 def getLands():
-    lands = []
-
-   # 取得所有的Section名稱
-    sections = config.sections()
-
-    for section in sections:
-        if section.startswith('Land'):
-            land = Land(dict(config.items(section)))
-            lands.append(land)
-
+    lands =  getParaListByConfig('Land', Land)
     return lands
 
-#Player
 class Player:
     def __init__(self, player_dict):
         self.id = int(player_dict['id'].strip())
         self.money = int(player_dict['money'].strip())
         self.status = int(player_dict['status'].strip())
         self.location = int(player_dict['location'].strip())
-
 # FUN:取得所有玩家資料 by config
 def getPlayers():
-    players = []
-
-   # 取得所有的Section名稱
-    sections = config.sections()
-
-    for section in sections:
-        if section.startswith('Player'):
-            player_dict = Player(dict(config.items(section)))
-            players.append(player_dict)
-
+    players =  getParaListByConfig('Player', Player)
     return players
 
-#ACTION
+
+#Game action
+#FUN: 初始化遊戲參數 by config
+def Initialize():
+    # 取得所有玩家資料
+    players = getPlayers()
+    # 取得所有土地資料
+    lands = getLands()
+    
+    global loserCount
+    loserCount = 0
+
+    return players, lands, rate_dict
+
 #FUN: player move
 def playerMove(player, landLen):
     player.location = player.location + random.randint(1, 4)
@@ -150,25 +123,60 @@ def lose(player):
     player.status = 1
     global loserCount
     loserCount += 1
+def getLoserCount():
+    return loserCount
 
-#FUN: DB
-#gameBatch: 第幾批次執行; gameNumber: 同一批次第幾局; consumedRound: 幾回合結束
-#playerInfo; 結束時各玩家資訊(json string); landInfo:結束時各土地資訊(json string)
+#DB
+#每一批次參數相同，一批次跑千局遊戲
+class GameSetting:
+    def __init__(self, gameBatch=0, rates='', players='', lands=''):
+        #第幾批次執行
+        self.gameBatch = gameBatch
+        #費率設定
+        self.rates = rates
+        #玩家起始設定
+        self.players = players
+        #土地起始設定
+        self.lands = lands
+# Select last batch from gameSetting
+def getLastBatchNum():
+    sql = """
+          SELECT TOP 1 GAMEBATCH
+          FROM GAMESETTING
+          ORDER BY GAMEBATCH DESC
+          """
+    row = selectDb(sql)
+    batchNum = row[0][0] if row else 0
+    return batchNum
+#Insert Table(GameResult)
+def recordSetting(setting):
+    sql = """
+         INSERT INTO GAMESETTING 
+         (GAMEBATCH, RATES, PLAYERS, LANDS)
+         VALUES (?, ?, ?, ?)
+         """
+    para_list = [setting.gameBatch, setting.rates, setting.players, setting.lands]
+    insertDb(sql, para_list)
+
 class GameResult:
     def __init__(self, gameBatch=0, gameNumber=0, consumedRound=0, playerInfo='', landInfo=''):
+        #第幾批次執行
         self.gameBatch = gameBatch
+        #同一批次第幾局
         self.gameNumber = gameNumber
+        #幾回合結束
         self.consumedRound = consumedRound
+        #結束時各玩家資訊(json string)
         self.playerInfo = playerInfo
+        #結束時各土地資訊(json string)
         self.landInfo = landInfo
-def insertGameResult(result):
+#InsertTable(GameResult)
+def recordResult(result):
     sql = """
-         INSERT INTO GameResult 
+         INSERT INTO GAMERESULT 
             (GAMEBATCH, GAMENUMBER, CONSUMEDROUND, PLAYERINFO, LANDINFO)
             VALUES (?, ?, ?, ?, ?)
          """
-    cursor = dbConn.cursor()  
-    cursor.execute(sql, (result.gameBatch, result.gameNumber, result.consumedRound, result.playerInfo, result.landInfo))
-    dbConn.commit()
-    dbConn.close()
+    para_list = [result.gameBatch, result.gameNumber, result.consumedRound, result.playerInfo, result.landInfo]
+    insertDb(sql, para_list)
 
