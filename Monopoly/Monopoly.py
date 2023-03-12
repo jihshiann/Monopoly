@@ -2,6 +2,7 @@
 import Lib
 import json
 
+
 roundCount = 0
 #取得所有玩家資料
 players = getPlayers()
@@ -39,14 +40,15 @@ while Lib.loserCount < len(players)- 1:
                 #接受過路費對象(地主)
                 payee = players[arriveLand.owner-1] 
                 #繳過路費
-                payForToll(player, payee, arriveLand, lands)
+                payToll(player, payee, arriveLand, lands)
 
     print(f"round = {roundCount} 結束")
     print(json.dumps(players, default=lambda p: p.__dict__))
     print()
     print(json.dumps(lands, default=lambda p: p.__dict__))
 
-print(f"Game over, round = {round}")
+result = GameResult(1, 1, roundCount, json.dumps(players, default=lambda p: p.__dict__), json.dumps(lands, default=lambda p: p.__dict__)) 
+insertGameResult(result)
     
 
 

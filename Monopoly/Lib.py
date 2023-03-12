@@ -1,20 +1,29 @@
 import configparser
 import os
 import random
+import pyodbc
+from py_linq import Enumerable
 
-#¨ú±oconfig
+server = '(localdb)\MSSQLLocalDB' 
+database = 'MonopolyRecord' 
+username = 'test' 
+password = 'test' 
+dbConn = pyodbc.connect('DRIVER={ODBC Driver 18 for SQL Server};SERVER='+server+';DATABASE='+database+';ENCRYPT=yes;UID='+username+';PWD='+ password)
+
+
+#å–å¾—config
 config = configparser.ConfigParser()
 configPath = os.path.join(os.path.dirname(__file__), 'config.ini')
 config.read(configPath)
-
+#å…¨åŸŸè®Šæ•¸
 loserCount = 0
 global rate_dict 
 rate_dict = {key: float(value) for key, value in dict(config.items('Rate')).items()}
 
-#FUN:¨ú±o¦U¶µ¶O²v by config
+#FUN:å–å¾—å„é …è²»ç‡ by config
 def getRateDict():
     rate_dict = dict(config.items('Rate'))
-    # ±N©Ò¦³ªº value Âà´«¬° float
+    # å°‡æ‰€æœ‰çš„ value è½‰æ›ç‚º float
     rate_dict = {key: float(value) for key, value in rate_dict.items()}
     return rate_dict
 
@@ -26,14 +35,14 @@ class Land:
         self.owner = land_dict['owner']
         self.level = int(land_dict['level'].strip())
         self.location = int(land_dict['location'].strip())
-        self.upgradeSpent = int(land_dict['upgradespent'].strip()) #¤g¦aÁ`¤É¯Åªá¶O
-        self.earn = int(land_dict['earn'].strip()) #¤g¦aÁ`¤âÄò¶O¦¬¤J
+        self.upgradeSpent = int(land_dict['upgradespent'].strip()) #å‡ç´šèŠ±è²»ç¸½é¡
+        self.earn = int(land_dict['earn'].strip()) #éè·¯è²»ç¸½æ”¶å…¥
 
-# FUN:¨ú±o¤g¦a³]©w by config
+# FUN:å–å¾—åœŸåœ°è¨­å®š by config
 def getLands():
     lands = []
 
-   # ¨ú±o©Ò¦³ªºSection¦WºÙ
+   # å–å¾—æ‰€æœ‰çš„Sectionåç¨±
     sections = config.sections()
 
     for section in sections:
@@ -51,11 +60,11 @@ class Player:
         self.status = int(player_dict['status'].strip())
         self.location = int(player_dict['location'].strip())
 
-# FUN:¨ú±o©Ò¦³ª±®a¸ê®Æ by config
+# FUN:å–å¾—æ‰€æœ‰ç©å®¶è³‡æ–™ by config
 def getPlayers():
     players = []
 
-   # ¨ú±o©Ò¦³ªºSection¦WºÙ
+   # å–å¾—æ‰€æœ‰çš„Sectionåç¨±
     sections = config.sections()
 
     for section in sections:
@@ -75,58 +84,58 @@ def playerMove(player, landLen):
 #FUN: buy or do nothing
 def buyOrPass(player, arriveLand):
     cost = arriveLand.price + arriveLand.upgradeSpent
-     #§PÂ_²{ª÷¬O§_¨¬°÷ÁÊ¶R
+     #åˆ¤æ–·ç¾é‡‘æ˜¯å¦è¶³å¤ è³¼è²·
     if player.money >= cost:
         player.money -= cost
         arriveLand.owner = player.id
 
 #FUN: upgrade or do nothing
 def upgradeOrPass(player, arriveLand):
-    #¤½¦¡: price * rate * level
+    #ç®—å¼: price * rate * level
     cost = rate_dict['upgrade'] * arriveLand.price * arriveLand.level
-    #§PÂ_²{ª÷¬O§_¨¬°÷¤É¯Å
+    #åˆ¤æ–·ç¾é‡‘æ˜¯å¦è¶³å¤ å‡ç´š
     if player.money >= cost:
         player.money -= cost
         arriveLand.level += 1
         arriveLand.upgradeSpent += cost
 
-#FUN: pay for toll
-def payForToll(player, payee, arriveLand, lands):
-    #¤½¦¡ price * rate * level
+#FUN: pay toll
+def payToll(player, payee, arriveLand, lands):
+    #ç®—å¼: price * rate * level
     toll = rate_dict['toll'] * arriveLand.price * arriveLand.level
     arriveLand.earn += toll
-    #²{ª÷¥R¨¬
+    #ç¾é‡‘å……è¶³
     if player.money >= toll:
         payee.money += toll
         player.money -= toll
     
-    #²{ª÷¤£¨¬
+    #ç¾é‡‘ä¸è¶³
     else:
-        #¥ı¥I²M²{ª÷
+        #å…ˆä»˜æ¸…ç¾é‡‘
         payee.money += player.money
         toll -=player.money
         player.money = 0
         playerLands = list(filter(lambda l: l.owner == player.id, lands))
         
-        #µL¦a«h¯}²£
+        #ç„¡åœ°å‰‡ç ´ç”¢
         if playerLands == None:
             lose(player)
             return
 
-        #²Mºâ¦a²£
+        #è¨ˆç®—ç¸½è³‡ç”¢
         playerLands.sort(key = lambda l: l.upgradeSpent + l.price)
         totalPrice = 0
         for land in playerLands:
-            totalPrice += land.upgradeSpent + land.price
+            totalPrice += (land.upgradeSpent + land.price)
 
-        #¦a²£¤£¨¬ÃB«h¯}²£
+        #ä¸è¶³é¡å‰‡ç ´ç”¢
         if totalPrice < toll:
             for land in playerLands:
                 land.owner = payee.id
             lose(player)
             return
 
-        #½æ¦a©è¶Å
+        #å¾æœ€ä¾¿å®œåœ°ç”¢é–‹å§‹æ¸…ç®—ä»¥æ”¯ä»˜è²»ç”¨
         for land in playerLands:
             while player.money < toll:
                 land.owner = 'None'
@@ -141,4 +150,25 @@ def lose(player):
     player.status = 1
     global loserCount
     loserCount += 1
+
+#FUN: DB
+#gameBatch: ç¬¬å¹¾æ‰¹æ¬¡åŸ·è¡Œ; gameNumber: åŒä¸€æ‰¹æ¬¡ç¬¬å¹¾å±€; consumedRound: å¹¾å›åˆçµæŸ
+#playerInfo; çµæŸæ™‚å„ç©å®¶è³‡è¨Š(json string); landInfo:çµæŸæ™‚å„åœŸåœ°è³‡è¨Š(json string)
+class GameResult:
+    def __init__(self, gameBatch=0, gameNumber=0, consumedRound=0, playerInfo='', landInfo=''):
+        self.gameBatch = gameBatch
+        self.gameNumber = gameNumber
+        self.consumedRound = consumedRound
+        self.playerInfo = playerInfo
+        self.landInfo = landInfo
+def insertGameResult(result):
+    sql = """
+         INSERT INTO GameResult 
+            (GAMEBATCH, GAMENUMBER, CONSUMEDROUND, PLAYERINFO, LANDINFO)
+            VALUES (?, ?, ?, ?, ?)
+         """
+    cursor = dbConn.cursor()  
+    cursor.execute(sql, (result.gameBatch, result.gameNumber, result.consumedRound, result.playerInfo, result.landInfo))
+    dbConn.commit()
+    dbConn.close()
 
