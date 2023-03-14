@@ -4,7 +4,7 @@ import json
 
 #第幾局遊戲
 gameNum = 0
-while gameNum < 1000:
+while gameNum < 10000:
     players, lands, rate_dict = Initialize()
     
     if gameNum == 0:
@@ -47,7 +47,6 @@ while gameNum < 1000:
                     payee = players[arriveLand.owner-1] 
                     #繳過路費
                     payToll(player, payee, arriveLand, lands)
-            print(f'round:{roundCount}結束')
 
     result = GameResult(thisBatch, gameNum, roundCount, objAryToJson(players), objAryToJson(lands)) 
     recordResult(result)

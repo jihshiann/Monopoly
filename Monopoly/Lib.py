@@ -127,7 +127,7 @@ def getLoserCount():
     return loserCount
 
 #DB
-#每一批次參數相同，一批次跑千局遊戲
+#每一批次參數相同，一批次跑數局遊戲
 class GameSetting:
     def __init__(self, gameBatch=0, rates='', players='', lands=''):
         #第幾批次執行
