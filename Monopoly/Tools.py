@@ -2,6 +2,8 @@ import json
 import configparser
 import os
 import pyodbc
+import pandas as pd
+from sqlalchemy import create_engine,text
 
 #config
 config = configparser.ConfigParser()
@@ -32,18 +34,35 @@ server = '(localdb)\MSSQLLocalDB'
 database = 'MonopolyRecord' 
 username = 'test' 
 password = 'test' 
-dbConn = pyodbc.connect('DRIVER={ODBC Driver 18 for SQL Server};SERVER='+server+';DATABASE='+database+';ENCRYPT=yes;UID='+username+';PWD='+ password)
+dbConn_pyodbc = pyodbc.connect('DRIVER={ODBC Driver 18 for SQL Server};SERVER='+server+';DATABASE='+database+';ENCRYPT=yes;UID='+username+';PWD='+ password)
+engine = create_engine(f"mssql+pyodbc://{username}:{password}@{server}/{database}?driver=ODBC Driver 18 for SQL Server")
 
 def selectDb(sql):
-    with dbConn.cursor() as cursor: 
+    with dbConn_pyodbc.cursor() as cursor: 
         cursor.execute(sql)
         rows = cursor.fetchall()
     return rows
 
 def insertDb(sql,para_list):
-    with dbConn.cursor() as cursor: 
+    with dbConn_pyodbc.cursor() as cursor: 
         cursor.execute(sql, para_list)
-        dbConn.commit()
+        dbConn_pyodbc.commit()
+
+def selectBySqlalchemy(sql):
+    sql = text(sql)
+    with engine.begin() as conn:
+        sql = sql
+        dataFrame = pd.read_sql_query(sql, conn)
+    return dataFrame
+
+def selectPlayerLastBatch():
+    sql = '''
+          SELECT [PLAYERINFO]
+          FROM [dbo].[GameResult]
+          WHERE [GAMEBATCH] = (SELECT MAX([GAMEBATCH]) FROM [dbo].[GameResult])
+          '''
+        
+    return selectBySqlalchemy(sql)
 
 #string
 def objAryToJson(array):
