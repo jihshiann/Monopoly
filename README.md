@@ -1,6 +1,7 @@
 # Monopoly
 *Traffic and Commercial Data Analytics Laboratory - First Programming Training Assignment*
 <br>
+### [PPT](https://docs.google.com/presentation/d/16AAIe4rSJtwenVXur8IXOz0qHh_0Hns0z_4yW9iteBI/edit?usp=sharing) 
 <br>
 <br>
 
@@ -27,10 +28,12 @@
 # 第一階段
 ## 遊戲流程
 
+流程程式碼: [Monopoly.py](https://github.com/jihshiann/Monopoly/blob/main/Monopoly/Monopoly.py)
+
 ### 流程大綱
-- 每個玩家輪流行動，單位為一回合，回合內執行動作可參考下方說明
-- 所有未破產玩家各執行一回合稱為一輪
-- 遊戲持續進行至，該輪僅剩一名玩家未破產為止
+1. 每個玩家輪流行動，單位為一回合，回合內執行動作可參考下方說明
+2. 所有未破產玩家各執行一回合稱為一輪
+3. 遊戲持續進行至，該輪僅剩一名玩家未破產為止，稱為一局
 
 ### 單一回合流程圖
 每一輪每個玩家執行一回合，持續進行至僅剩一名玩家狀態為play
@@ -62,27 +65,55 @@ graph TD
     F -->Q[玩家B回合開始]
     M -->Q
 ```
+<br>
+<br>
 
 ## 參數
+### 初始設定
+- player: ![player](https://user-images.githubusercontent.com/41182558/226081610-63ddb21f-f501-432f-ad23-33d981de486d.png)
 
-### 玩家
+- land: ![land](https://user-images.githubusercontent.com/41182558/226081629-bacd3ef2-fc37-4523-a214-ec747cfee35d.png)
+
+### 玩家可調參數
 玩家人數共四位，人數不可調，每個玩家包含參數:
-1. money: 初始設定為100元，用以支付遊戲內所有花費
-2. location: 玩家所在位置，初始設定為0,4,8,12，對應至[土地之唯一編號]
+- money: 初始設定為100元，用以支付遊戲內所有花費
+- location: 玩家所在位置，初始設定為0,4,8,12，對應至 **land.location**
 
-### 地圖
+### 地圖可調參數
 地圖總共15格，格數不可調整，每格土地包含參數:
-1. price: 無主地購買價，升級費用及過路費也受此參數影響，各地初始設定不盡相同
-2. level: 土地已升級次數，升級費用及過路費受此參數影響，初始設定為1且 **不可調整**
+- price: 無主地購買價，升級費用及過路費也受此參數影響，各地初始設定不盡相同
+- level: 土地已升級次數，升級費用及過路費受此參數影響，初始設定為1且 _**不可調整**_
 
 ### 費率
 影響各種費用之計算:
-1. toll: 過路費費率，初始設定為0.1。 計算方式為 price * rate * level
-2. upgrade: 升級費率，初始設定為0.5。 計算方式為 price * upgrade * level
+- toll: 過路費費率，初始設定為0.1。 計算方式為 price * rate * level
+- upgrade: 升級費率，初始設定為0.5。 計算方式為 price * upgrade * level
+<br>
+<br>
 
 ## 影響因子
-1. 上述參數
+1. 上述可調參數
 2. 可移動距離，設定為1-4
 3. 玩家執行順序，設定為依照玩家id輪流
-4. 買/升級 機率，設定為資產足夠則直接購買或升級，即100%
+4. 現金足夠時，買/升級土地機率，設定為資產足夠則直接買地/升級(100%)
 5. 現金不足清算方式，設定為從價值最低地產開始清算
+<br>
+<br>
+
+## 全自動化遊戲
+使用程式碼包含
+1. [Monopoly.py](https://github.com/jihshiann/Monopoly/blob/main/Monopoly/Monopoly.py)
+2. [Lib.py](https://github.com/jihshiann/Monopoly/blob/main/Monopoly/Lib.py)
+3. [Tools.py](https://github.com/jihshiann/Monopoly/blob/main/Monopoly/Tools.py)
+4. [config.ini](https://github.com/jihshiann/Monopoly/blob/main/Monopoly/config.ini)
+<br>
+<br>
+
+## 可調參數之影響
+### 預設參數執行結果
+1. 勝率: [圖表](https://github.com/jihshiann/Monopoly/blob/main/Digram/default%20parameter/Win%20rate.png)
+1. 遊戲進行輪數: [圖表](https://github.com/jihshiann/Monopoly/blob/main/Digram/default%20parameter/Consumed%20Rounds%20Count.png)
+1. 各地破產機率(每局): [圖表](https://github.com/jihshiann/Monopoly/blob/main/Digram/default%20parameter/Bankruptcy%20probability%20by%20location.png)
+1. 各地其他數據統計: [圖表](https://github.com/jihshiann/Monopoly/blob/main/Digram/default%20parameter/Lands%20for%20game%20results.png)
+
+ 
