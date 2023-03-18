@@ -36,7 +36,6 @@
 3. 遊戲持續進行至，該輪僅剩一名玩家未破產為止，稱為一局
 
 ### 單一回合流程圖
-每一輪每個玩家執行一回合，持續進行至僅剩一名玩家狀態為play
 ```mermaid
 graph TD
     A[玩家A回合開始] --> B[玩家A移動1-4步] ;
@@ -74,12 +73,12 @@ graph TD
 
 - land: ![land](https://user-images.githubusercontent.com/41182558/226081629-bacd3ef2-fc37-4523-a214-ec747cfee35d.png)
 
-### 玩家可調參數
+### player可調參數
 玩家人數共四位，人數不可調，每個玩家包含參數:
 - money: 初始設定為100元，用以支付遊戲內所有花費
 - location: 玩家所在位置，初始設定為0,4,8,12，對應至 **land.location**
 
-### 地圖可調參數
+### land可調參數
 地圖總共15格，格數不可調整，每格土地包含參數:
 - price: 無主地購買價，升級費用及過路費也受此參數影響，各地初始設定不盡相同
 - level: 土地已升級次數，升級費用及過路費受此參數影響，初始設定為1且 _**不可調整**_
@@ -110,10 +109,12 @@ graph TD
 <br>
 
 ## 可調參數之影響
-### 預設參數執行結果
+### 預設參數執行結果(10000局)
+統計及圖表繪製程式碼: [Analysis.py](https://github.com/jihshiann/Monopoly/blob/main/Monopoly/Analysis.py)
 1. 勝率: [圖表](https://github.com/jihshiann/Monopoly/blob/main/Digram/default%20parameter/Win%20rate.png)
-1. 遊戲進行輪數: [圖表](https://github.com/jihshiann/Monopoly/blob/main/Digram/default%20parameter/Consumed%20Rounds%20Count.png)
+1. 各地數據統計: [圖表](https://github.com/jihshiann/Monopoly/blob/main/Digram/default%20parameter/Lands%20for%20game%20results.png)
 1. 各地破產機率(每局): [圖表](https://github.com/jihshiann/Monopoly/blob/main/Digram/default%20parameter/Bankruptcy%20probability%20by%20location.png)
-1. 各地其他數據統計: [圖表](https://github.com/jihshiann/Monopoly/blob/main/Digram/default%20parameter/Lands%20for%20game%20results.png)
+1. 各地無收入機率(每局):
+1. 遊戲進行輪數: [圖表](https://github.com/jihshiann/Monopoly/blob/main/Digram/default%20parameter/Consumed%20Rounds%20Count.png)
 
  
