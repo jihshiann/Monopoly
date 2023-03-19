@@ -1,5 +1,5 @@
 # Monopoly
-*Traffic and Commercial Data Analytics Laboratory - First Programming Training Assignment*
+*交通與工商數據分析實驗室-第一次程式訓練作業*
 <br>
 ### [PPT](https://docs.google.com/presentation/d/16AAIe4rSJtwenVXur8IXOz0qHh_0Hns0z_4yW9iteBI/edit?usp=sharing) 
 <br>
@@ -114,7 +114,67 @@ graph TD
 1. 勝率: [圖表](https://github.com/jihshiann/Monopoly/blob/main/Digram/default%20parameter/Win%20rate.png)
 1. 各地數據統計: [圖表](https://github.com/jihshiann/Monopoly/blob/main/Digram/default%20parameter/Lands%20for%20game%20results.png)
 1. 各地破產機率(每局): [圖表](https://github.com/jihshiann/Monopoly/blob/main/Digram/default%20parameter/Bankruptcy%20probability%20by%20location.png)
-1. 各地無收入機率(每局):
+1. 各地無收入機率(每局): [圖表]
 1. 遊戲進行輪數: [圖表](https://github.com/jihshiann/Monopoly/blob/main/Digram/default%20parameter/Consumed%20Rounds%20Count.png)
 
- 
+### 調整後執行結果
+1. 勝率: [圖表]
+1. 各地數據統計: [圖表]
+1. 各地破產機率: [圖表]
+1. 各地無收入機率:[圖表]
+1. 遊戲進行輪數: [圖表]
+
+### 參數影響結論
+1. 玩家勝率: 被玩家順位影響，可經由起始金額補償改善
+1. 遊戲時間:
+    1. 起始金額越高可能導致遊戲時間越久
+1. 較高的手續費率及較低的升級費用可以降低遊戲時間
+1. 土地無收入機率: 較高的土地價格會使該地難以被購買，進而導致無收入機率提高
+1. 土地破產機率:
+    1. 當各地 *無收入機率* 差異明顯時，無收入機率越高(無人購買)者破產機率越低
+    1. 當差異甚小時則反之，無收入機率越高(價格、過路費高)則破產機率越高
+1. 異常狀況: 起始現金不足時，後面格數土地會出現高機率無人能購買的情況
+<br>
+<br>
+<br>
+
+# 第二階段
+## 不合理數值設定
+- 過低player.money，無後手補償: ![player](https://user-images.githubusercontent.com/41182558/226152113-91bc6c58-fb85-4d4e-ab8a-6869ceafc738.png)
+- Taipei.price 高於玩家起始金額: ![land](https://user-images.githubusercontent.com/41182558/226152136-1b96b20d-19b3-42c1-a266-5b2b335aaebf.png)
+<br>
+<br>
+
+### 執行結果
+1. 勝率: [圖表]
+1. 各地數據統計: [圖表]
+1. 各地破產機率: [圖表]
+1. 各地無收入機率:[圖表]
+1. 遊戲進行輪數: [圖表]
+### 符合預期
+1. 玩家勝率受行動順位影響
+1. 遊戲時間變低且集中
+1. 高價位土地無收入機率極高
+1. 高價位土地造成破產機率極低
+1. 越高價位土地，收入及升級次數越低
+
+### 未預期
+- 同價位土地，有location越大收入越低的趨勢
+<br>
+<br>
+
+## 參數自動調整
+### 自動調整流程
+```mermaid
+graph TD
+    A{檢查各玩家勝率是否異常} ;
+    A -->|異常| B[調整起始金額];
+    B -->C[執行遊戲10000局];
+    C -->A;
+    A -->|正常| D{檢查各地無收入機率};
+    D -->|異常| E[調整土地價格];
+    E -->C;
+    D -->|正常| F{檢查各地破產機率};
+    F -->|異常| E;
+    F -->|正常| G[自動參數調整完畢]
+```
