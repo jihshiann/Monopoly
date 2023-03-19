@@ -29,6 +29,12 @@ def getParaListByConfig(paraName, paraType):
 
     return objs
 
+def setConfig(section, attr, value):
+    config.set(section, attr, str(value))
+    with open(configPath, 'w') as config_file:
+        config.write(config_file)
+
+
 #DB
 server = '(localdb)\MSSQLLocalDB' 
 database = 'MonopolyRecord' 
@@ -58,6 +64,15 @@ def selectBySqlalchemy(sql):
 def selectPlayerLastBatch():
     sql = '''
           SELECT [PLAYERINFO]
+          FROM [dbo].[GameResult]
+          WHERE [GAMEBATCH] = (SELECT MAX([GAMEBATCH]) FROM [dbo].[GameResult])
+          '''
+        
+    return selectBySqlalchemy(sql)
+
+def selectLandLastBatch():
+    sql = '''
+          SELECT [LANDINFO]
           FROM [dbo].[GameResult]
           WHERE [GAMEBATCH] = (SELECT MAX([GAMEBATCH]) FROM [dbo].[GameResult])
           '''

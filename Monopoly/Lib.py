@@ -17,11 +17,13 @@ class Land:
         self.upgradeSpent = int(land_dict['upgradespent'].strip()) 
         #過路費總收入
         self.earn = int(land_dict['earn'].strip()) 
-
 # FUN:取得土地設定 by config
 def getLands():
     lands =  getParaListByConfig('Land', Land)
     return lands
+# FUN: 調整土地價格
+def adjustLandMoney(land):
+    setConfig(f'Land{land.location}', 'price', land.price - 10)
 
 class Player:
     def __init__(self, player_dict):
@@ -33,6 +35,12 @@ class Player:
 def getPlayers():
     players =  getParaListByConfig('Player', Player)
     return players
+# FUN: 調整玩家起始金額
+def adjustPlayersMoney(players):
+    for i, player in enumerate(players, 1):
+        if player.money < 100:
+            player.money = 100
+        setConfig(f'Player{i}', 'money', player.money + 5*i)
 
 
 #Game action
@@ -125,6 +133,7 @@ def lose(player):
     loserCount += 1
 def getLoserCount():
     return loserCount
+
 
 #DB
 #每一批次參數相同，一批次跑數局遊戲

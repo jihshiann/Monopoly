@@ -19,13 +19,6 @@ def countRoundConsumed():
     #計算分組數量
     countByRange = df['ConsumedRoundGroup'].value_counts(sort=False)
     return countByRange
-def plotBarChart(df, title, x, y):
-    df.plot(kind='bar')
-    plt.title(title)
-    plt.xlabel(x)
-    plt.ylabel(y)
-    plt.show()
-
 
 def calculateWinRate():
     df = selectPlayerLastBatch()
@@ -58,8 +51,13 @@ def drawPieChart(df, labels, title):
     ax.pie(df, labels=labels, colors=colors, autopct='%1.1f%%')
     ax.set_title(title)
     plt.show()
+def checkWinRate():
+    winRate_df, labels = calculateWinRate()
+    winRate = {player+1:rate for player,rate in enumerate(winRate_df)}
+    avgRate = 1/len(winRate)
+    return max(winRate.values()) - min(winRate.values()) <= avgRate / len(winRate)
 
-def calcBankruptcyProbByLoc():
+def calcBankruptcyProbBy():
     df = selectPlayerLastBatch()
     #bankruptcyCount= {location1: count1, location2: count2, ...}
     bankruptcyCount = {}
@@ -72,12 +70,22 @@ def calcBankruptcyProbByLoc():
     bankruptcy_df['prob'] = bankruptcy_df['bankruptcy_count'] / len(df)
 
     return bankruptcy_df
-def plotBarChart(dfx, dfy, title, x, y):
-    plt.bar(dfx, dfy)
+def plotBarChart(df=None, dfx=None, dfy=None, title='', x='', y=''):
+    if df is not None:
+        df.plot(kind='bar')
+    elif dfx is not None and dfy is not None:
+        plt.bar(dfx, dfy)
+    else:
+        raise ValueError("Missing data for the bar chart.")
+    
     plt.title(title)
     plt.xlabel(x)
     plt.ylabel(y)
     plt.show()
+def checkBankruptcyProb(bankruptcy_df):
+    bankruptcyProb = {i+1:land for i,land in enumerate(bankruptcy_df)}
+    avgRate = 3/len(bankruptcy_df)
+    return max( bankruptcy_df['prob']) - min( bankruptcy_df['prob']) <= avgRate / len(bankruptcyProb)
 
 def landInfoStatistic():
     sql =   '''
@@ -156,15 +164,36 @@ def plotLandsResultBarChart(landsResultInfo):
     # 顯示圖表
     plt.show()
 
-#消耗回合數
-roundConsumed_df = countRoundConsumed()
-plotBarChart(roundConsumed_df, 'Consumed Rounds Count', 'Consumed Round', 'Count')
-#玩家勝率
-winRate_df, labels = calculateWinRate()
-drawPieChart(winRate_df, labels, 'Win percentages by player')
-#各地破產比率
-bankruptcy_df = calcBankruptcyProbByLoc()
-plotBarChart(bankruptcy_df['local_id'], bankruptcy_df['prob'], 'Bankruptcy probability by location', 'location', 'probability')
-#遊戲結束時各地數值統計
-landsResultInfo = landInfoStatistic()
-plotLandsResultBarChart(landsResultInfo)
+def calcNeverEarnedLandProb():
+    df = selectLandLastBatch()
+    #neverEarnedCount = {location1: count1, location2: count2, ...}
+    neverEarnedCount = {}
+    for landInfo_list in df['LANDINFO'].apply(json.loads):
+        for land in landInfo_list:
+            if land['earn'] == 0:
+                location = land['location']
+                neverEarnedCount[location] = neverEarnedCount.get(location, 0) + 1
+    neverEarned_df = pd.DataFrame({"local_id": list(neverEarnedCount.keys()), "neverEarned_count": list(neverEarnedCount.values())})
+    neverEarned_df['prob'] = neverEarned_df['neverEarned_count'] / len(df)
+
+    return neverEarned_df
+def checkNeverEarnedProb(neverEarned_df):
+    neverEarnedProb = {i+1:land for i,land in enumerate(neverEarned_df)}
+    avgRate = 1/len(neverEarned_df)
+    return max(neverEarned_df['prob']) - min(neverEarned_df['prob']) <= avgRate / len(neverEarnedProb)
+
+##消耗回合數
+#roundConsumed_df = countRoundConsumed()
+#plotBarChart(roundConsumed_df, None, None, 'Consumed Rounds Count', 'Consumed Round', 'Count')
+##玩家勝率
+#winRate_df, labels = calculateWinRate()
+#drawPieChart(winRate_df, labels, 'Win percentages by player')
+##各地破產比率
+#bankruptcy_df = calcBankruptcyProbBy()
+#plotBarChart(None, bankruptcy_df['local_id'], bankruptcy_df['prob'], 'Bankruptcy probability by location', 'location', 'probability')
+##各地無收入機率
+#neverEarned_df = calcNeverEarnedLandProb()
+#plotBarChart(None, neverEarned_df['local_id'], neverEarned_df['prob'], 'Probability of land no income', 'location', 'probability')
+###遊戲結束時各地數值統計
+#landsResultInfo = landInfoStatistic()
+#plotLandsResultBarChart(landsResultInfo)

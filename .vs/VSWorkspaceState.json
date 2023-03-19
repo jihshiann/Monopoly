@@ -2,9 +2,10 @@
   "ExpandedNodes": [
     "",
     "\\DataBase",
+    "\\Digram",
     "\\Monopoly",
     "\\Monopoly\\__pycache__"
   ],
-  "SelectedNode": "\\Monopoly\\Monopoly.py",
+  "SelectedNode": "\\Monopoly\\Analysis.py",
   "PreviewInSolutionExplorer": false
 }
