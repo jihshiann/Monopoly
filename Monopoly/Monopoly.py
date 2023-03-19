@@ -1,4 +1,4 @@
-﻿from Lib import *
+﻿from Library import *
 from Tools import *
 import json
 
