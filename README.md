@@ -1,7 +1,7 @@
 # Monopoly
 *交通與工商數據分析實驗室-第一次程式訓練作業*
 <br>
-### [PPT](https://docs.google.com/presentation/d/16AAIe4rSJtwenVXur8IXOz0qHh_0Hns0z_4yW9iteBI/edit?usp=sharing) 
+### [簡報](https://docs.google.com/presentation/d/16AAIe4rSJtwenVXur8IXOz0qHh_0Hns0z_4yW9iteBI/edit?usp=sharing) 
 <br>
 <br>
 
@@ -113,15 +113,15 @@ graph TD
 1. 勝率: [圖表](https://github.com/jihshiann/Monopoly/blob/main/Digram/default%20parameter/Win%20rate.png)
 1. 各地數據統計: [圖表](https://github.com/jihshiann/Monopoly/blob/main/Digram/default%20parameter/Lands%20for%20game%20results.png)
 1. 各地破產機率(每局): [圖表](https://github.com/jihshiann/Monopoly/blob/main/Digram/default%20parameter/Bankruptcy%20probability%20by%20location.png)
-1. 各地無收入機率(每局): [圖表]
+1. 各地無收入機率(每局): [圖表](https://github.com/jihshiann/Monopoly/blob/main/Diagram/default%20parameter/Probability%20of%20land%20no%20income.png)
 1. 遊戲進行輪數: [圖表](https://github.com/jihshiann/Monopoly/blob/main/Digram/default%20parameter/Consumed%20Rounds%20Count.png)
 
 ### 調整後執行結果
-1. 勝率: [圖表]
-1. 各地數據統計: [圖表]
-1. 各地破產機率: [圖表]
-1. 各地無收入機率:[圖表]
-1. 遊戲進行輪數: [圖表]
+1. 勝率: [圖表](https://github.com/jihshiann/Monopoly/blob/main/Diagram/third%20adjustment/Win%20rate.png)
+1. 各地數據統計: [圖表](https://github.com/jihshiann/Monopoly/blob/main/Diagram/third%20adjustment/Lands%20for%20game%20results.png)
+1. 各地破產機率: [圖表](https://github.com/jihshiann/Monopoly/blob/main/Diagram/third%20adjustment/Bankruptcy%20probability%20by%20location.png)
+1. 各地無收入機率:[圖表](https://github.com/jihshiann/Monopoly/blob/main/Diagram/third%20adjustment/Probability%20of%20land%20no%20income.png)
+1. 遊戲進行輪數: [圖表](https://github.com/jihshiann/Monopoly/blob/main/Diagram/third%20adjustment/Consumed%20Rounds%20Count.png)
 
 ### 參數影響結論
 1. 玩家勝率: 被玩家順位影響，可經由起始金額補償改善
@@ -145,11 +145,12 @@ graph TD
 <br>
 
 ### 執行結果
-1. 勝率: [圖表]
-1. 各地數據統計: [圖表]
-1. 各地破產機率: [圖表]
-1. 各地無收入機率:[圖表]
-1. 遊戲進行輪數: [圖表]
+1. 勝率: [圖表](https://github.com/jihshiann/Monopoly/blob/main/Diagram/unjustifiable%20parameter/Win%20rate.png)
+1. 各地數據統計: [圖表](https://github.com/jihshiann/Monopoly/blob/main/Diagram/unjustifiable%20parameter/Lands%20for%20game%20results.png)
+1. 各地破產機率: [圖表](https://github.com/jihshiann/Monopoly/blob/main/Diagram/unjustifiable%20parameter/Bankruptcy%20probability%20by%20location.png)
+1. 各地無收入機率:[圖表](https://github.com/jihshiann/Monopoly/blob/main/Diagram/unjustifiable%20parameter/Probability%20of%20land%20no%20income.png)
+1. 遊戲進行輪數: [圖表](https://github.com/jihshiann/Monopoly/blob/main/Diagram/unjustifiable%20parameter/Consumed%20Rounds%20Count.png)
+
 ### 符合預期
 1. 玩家勝率受行動順位影響
 1. 遊戲時間變低且集中
@@ -183,11 +184,11 @@ graph TD
 ### 自動調整結果
 1. player參數: ![player](https://user-images.githubusercontent.com/41182558/226168901-578a0101-1276-414b-98e5-70009dfe7eb6.png)
 1. land參數: ![land](https://user-images.githubusercontent.com/41182558/226168917-78b91905-18fb-4914-b042-bec5f7aae00a.png)
-1. 勝率: [圖表]
-1. 各地數據統計: [圖表]
-1. 各地破產機率: [圖表]
-1. 各地無收入機率:[圖表]
-1. 遊戲進行輪數: [圖表]
+1. 勝率: [圖表](https://github.com/jihshiann/Monopoly/blob/main/Diagram/auto-adjust%20result/Win%20rate.png)
+1. 各地數據統計: [圖表](https://github.com/jihshiann/Monopoly/blob/main/Diagram/auto-adjust%20result/Lands%20for%20game%20results.png)
+1. 各地破產機率: [圖表](https://github.com/jihshiann/Monopoly/blob/main/Diagram/auto-adjust%20result/Bankruptcy%20probability%20by%20location.png)
+1. 各地無收入機率:[圖表](https://github.com/jihshiann/Monopoly/blob/main/Diagram/auto-adjust%20result/Probability%20of%20land%20no%20income.png)
+1. 遊戲進行輪數: [圖表](https://github.com/jihshiann/Monopoly/blob/main/Diagram/auto-adjust%20result/Consumed%20Rounds%20Count.png)
 <br>
 <br>
 
