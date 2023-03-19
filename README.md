@@ -10,9 +10,9 @@
 ## 第一階段-遊戲參數與結果間關係的觀察
 **練習資料呈現與異常狀況發現**
 1. 設計一個大富翁遊戲，並說明 
-  - 本遊戲的遊玩流程
-  - 本遊戲內所有的可調參數
-  - 本遊戲該考慮哪些因子以達到遊戲平衡
+    - 本遊戲的遊玩流程
+    - 本遊戲內所有的可調參數
+    - 本遊戲該考慮哪些因子以達到遊戲平衡
 2. 實作該遊戲，其中該遊戲必須能全自動化進行
 3. 執行該遊戲數千輪，探討每個可調參數對遊戲結果造成的影響，並討論你目前的可調參數是否有造成任何會影響遊戲平衡的異常狀況
 
@@ -29,7 +29,6 @@
 ## 遊戲流程
 
 流程程式碼: [Monopoly.py](https://github.com/jihshiann/Monopoly/blob/main/Monopoly/Monopoly.py)
-
 ### 流程大綱
 1. 每個玩家輪流行動，單位為一回合，回合內執行動作可參考下方說明
 2. 所有未破產玩家各執行一回合稱為一輪
@@ -100,7 +99,7 @@ graph TD
 <br>
 
 ## 全自動化遊戲
-使用程式碼包含
+程式碼包含
 1. [Monopoly.py](https://github.com/jihshiann/Monopoly/blob/main/Monopoly/Monopoly.py)
 2. [Lib.py](https://github.com/jihshiann/Monopoly/blob/main/Monopoly/Lib.py)
 3. [Tools.py](https://github.com/jihshiann/Monopoly/blob/main/Monopoly/Tools.py)
@@ -164,6 +163,8 @@ graph TD
 <br>
 
 ## 參數自動調整
+
+流程程式碼: [Auto-adjust Monopoly]
 ### 自動調整流程
 ```mermaid
 graph TD
@@ -178,3 +179,24 @@ graph TD
     F -->|異常| E;
     F -->|正常| G[自動參數調整完畢]
 ```
+
+### 自動調整結果
+1. player參數: ![player](https://user-images.githubusercontent.com/41182558/226168901-578a0101-1276-414b-98e5-70009dfe7eb6.png)
+1. land參數: ![land](https://user-images.githubusercontent.com/41182558/226168917-78b91905-18fb-4914-b042-bec5f7aae00a.png)
+1. 勝率: [圖表]
+1. 各地數據統計: [圖表]
+1. 各地破產機率: [圖表]
+1. 各地無收入機率:[圖表]
+1. 遊戲進行輪數: [圖表]
+<br>
+<br>
+
+## 結論
+- 調整方針方向正確，使得最終能達到遊戲平衡
+
+- 若希望最終參數能盡量貼近原始設定，則方法細節需要再設計
+- 將玩家起始現金提升到100以上，能有效解決 後面土地高機率無人能購買 的異常情況，
+  但仍未細究原因，有自動調整失靈的隱憂
+
+- 其他影響因子(可移動距離、變更玩家執行順序、買/升級土地機率、清算方法等)，
+  尚未加入探討
