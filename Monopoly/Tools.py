@@ -79,6 +79,15 @@ def selectLandLastBatch():
         
     return selectBySqlalchemy(sql)
 
+def selectConsumedRoundLastBatch():
+    sql = '''
+          SELECT [LANDINFO]
+          FROM [dbo].[GameResult]
+          WHERE [GAMEBATCH] = (SELECT MAX([GAMEBATCH]) FROM [dbo].[GameResult])
+          '''
+        
+    return selectBySqlalchemy(sql)
+
 #string
 def objAryToJson(array):
     return json.dumps(array, default=lambda p: p.__dict__)

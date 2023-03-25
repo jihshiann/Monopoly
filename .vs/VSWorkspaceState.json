@@ -1,9 +1,10 @@
 {
   "ExpandedNodes": [
     "",
+    "\\DB_schema",
+    "\\Diagram",
     "\\Monopoly",
     "\\Monopoly\\__pycache__"
   ],
-  "SelectedNode": "\\Monopoly\\Library.py",
   "PreviewInSolutionExplorer": false
 }

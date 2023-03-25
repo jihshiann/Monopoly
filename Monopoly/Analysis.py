@@ -7,12 +7,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 
 def countRoundConsumed():
-    sql =   '''
-            SELECT [CONSUMEDROUND]
-            FROM [dbo].[GameResult]
-            WHERE [GAMEBATCH] = (SELECT MAX([GAMEBATCH]) FROM [dbo].[GameResult])
-            '''
-    df = selectBySqlalchemy(sql)
+    df = selectConsumedRoundLastBatch()
 
     #資料分組
     df['ConsumedRoundGroup'] = pd.cut(df['CONSUMEDROUND'], bins=range(0, 601, 10), right=False, labels=range(5, 600, 10))
@@ -88,12 +83,7 @@ def checkBankruptcyProb(bankruptcy_df):
     return max( bankruptcy_df['prob']) - min( bankruptcy_df['prob']) <= avgRate / len(bankruptcyProb)
 
 def landInfoStatistic():
-    sql =   '''
-            SELECT [LANDINFO]
-            FROM [dbo].[GameResult]
-            WHERE [GAMEBATCH] = (SELECT MAX([GAMEBATCH]) FROM [dbo].[GameResult])
-            '''
-    land_df = selectBySqlalchemy(sql)
+    land_df = selectLandLastBatch()
     landInfos = land_df['LANDINFO'].apply(json.loads)
 
     # 從 landInfos 中取得資料
